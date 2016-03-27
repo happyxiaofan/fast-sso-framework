@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<systems>
+    <system id="oa"  name="OA系统">
+        <baseUrl>http://www.test.loc</baseUrl>
+        <homeUri>/index.html</homeUri>
+        <innerAddress>http://192.168.0.151</innerAddress>
+    </system>
+    <system id="crm"  name="客户管理系统">
+        <baseUrl>http://www.test2.loc</baseUrl>
+        <homeUri>/index.jsp</homeUri>
+        <innerAddress>http://192.168.0.152</innerAddress>
+    </system>
+</systems>
