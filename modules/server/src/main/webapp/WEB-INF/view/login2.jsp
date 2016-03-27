@@ -5,8 +5,8 @@
 <head>
 <meta charset="UTF-8">
 <title>${sysName}</title>
-<script type="text/javascript" src="${appctx}/scripts/jquery.js"></script>
-<script type="text/javascript" src="${appctx}/scripts/cookie_util.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/scripts/jquery.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/scripts/cookie_util.js"></script>
 <script type="text/javascript">
 	
 	var UNAME_COOKIE_NAME = "lastLoginUserName";
@@ -22,16 +22,18 @@
 		});
 		
 		// 加载验证码
-		drawCaptcha();
+		//drawCaptcha();
 	});
 	
 	function drawCaptcha() {
-		$.ajax("${appctx}/preLogin").done(function(data) {
-			console.log(data);
-			$("#captchaImg").attr("src", data.imgData);
-		}).fail(function() {
-			alert("验证码加载失败");
-		});
+		var im = $("#captchaImg");
+		im.src = "${pageContext.request.contextPath}/preLogin?time=" + new Date().getTime();
+		/*.done(function(data) {
+		 console.log(data);
+		 $("#captchaImg").attr("src", data.imgData);
+		 }).fail(function() {
+		 alert("验证码加载失败");
+		 });*/
 	}
 </script>
 </head>
@@ -45,14 +47,14 @@
 <form action="/login" method="post">
 	<p>账号：<input type="text" name="name" autocomplete="off" /></p>
 	<p>密码：<input type="password" name="passwd" autocomplete="off" /></p>
-	<p>验证码：<input style="width:80px;" type="text" name="captcha" autocomplete="off" /><img src="" onclick="drawCaptcha();" id="captchaImg" style="cursor:pointer;"></p>
+	<p>验证码：<input style="width:80px;" type="text" name="captcha" autocomplete="off" /><img src="preLogin" onclick="drawCaptcha()" id="captchaImg" style="cursor:pointer;"></p>
 	<p><input type="submit" value="登录" /></p>
 </form>
 </c:if>
 
 <c:if test="${not empty loginUser}">
 <p>欢迎：${loginUser}
-	<button style="margin-left:20px;" onclick="location.href='http://www.ca.com/logout'">退出</button>
+	<button style="margin-left:20px;" onclick="location.href='http://www.ca.com:8080/logout'">退出</button>
 </p>
 <ul>
 	<c:forEach items="${sysList }" var="sys">

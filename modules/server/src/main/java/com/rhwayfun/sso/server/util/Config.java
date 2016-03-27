@@ -3,6 +3,7 @@ package com.rhwayfun.sso.server.util;
 import com.rhwayfun.sso.server.model.ClientSystem;
 import com.rhwayfun.sso.server.model.LoginUser;
 import com.rhwayfun.sso.server.service.IAuthenticationHandler;
+import com.rhwayfun.sso.server.service.IPreLoginHandler;
 import org.dom4j.Document;
 import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
@@ -27,6 +28,8 @@ public class Config implements ResourceLoaderAware{
     private String loginViewName = "login";
     //授权处理器
     private IAuthenticationHandler authenticationHandler;
+    //预登陆处理器
+    private IPreLoginHandler preLoginHandler;
     //过期时间，单位是分钟
     private int timeout = 30;
     //业务系统列表
@@ -160,4 +163,11 @@ public class Config implements ResourceLoaderAware{
         this.authenticationHandler = authenticationHandler;
     }
 
+    public IPreLoginHandler getPreLoginHandler() {
+        return preLoginHandler;
+    }
+
+    public void setPreLoginHandler(IPreLoginHandler preLoginHandler) {
+        this.preLoginHandler = preLoginHandler;
+    }
 }

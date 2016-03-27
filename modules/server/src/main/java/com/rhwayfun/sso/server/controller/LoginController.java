@@ -2,8 +2,10 @@ package com.rhwayfun.sso.server.controller;
 
 import com.rhwayfun.sso.common.CookieUtil;
 import com.rhwayfun.sso.common.StringUtil;
+import com.rhwayfun.sso.server.model.ClientSystem;
 import com.rhwayfun.sso.server.model.Credential;
 import com.rhwayfun.sso.server.model.LoginUser;
+import com.rhwayfun.sso.server.service.IPreLoginHandler;
 import com.rhwayfun.sso.server.util.Config;
 import com.rhwayfun.sso.server.util.TokenManager;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,12 +13,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.util.Collections;
 import java.util.Map;
 
 /**
@@ -78,6 +80,8 @@ public class LoginController {
                                 HttpSession session) throws Exception {
         //获取request中所有的请求参数
         final Map<String,String[]> params = request.getParameterMap();
+        //获取session的值
+        final Object sessionVal = session.getAttribute(IPreLoginHandler.SESSION_ATTR_NAME);
         //创建令牌信息
         Credential credential = new Credential() {
 
@@ -90,6 +94,11 @@ public class LoginController {
             @Override
             public String[] getParameters(String name) throws Exception {
                 return params.get(name);
+            }
+
+            @Override
+            public Object getSettedSessionValue() throws Exception {
+                return sessionVal;
             }
 
         };
@@ -106,6 +115,53 @@ public class LoginController {
         }
     }
 
+    /**
+     * 预加载图形验证码
+     * @param session
+     * @param response
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping("/preLogin")
+    public Map<?, ?> preLogin(HttpSession session,HttpServletResponse response) throws Exception{
+        IPreLoginHandler preLoginHandler = config.getPreLoginHandler();
+        if (preLoginHandler == null){
+            throw new Exception("没有配置预处理器");
+        }
+        return preLoginHandler.handle(session,response);
+    }
+
+    /**
+     * 单点退出的方法
+     * @param backUrl
+     * @param response
+     * @param request
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping("/logout")
+    public String logout(String backUrl,HttpServletResponse response,HttpServletRequest request) throws Exception{
+        //获取客户端的vt
+        String vt = CookieUtil.getCookie("VT",request);
+        //移除vt
+        TokenManager.invalid(vt);
+        //设置服务端的vt失效
+        Cookie cookie = new Cookie("VT",null);
+        cookie.setMaxAge(0);
+        response.addCookie(cookie);
+
+        //通知各个客户端失效
+        for (ClientSystem client:config.getClientSystems()) {
+            client.noticeShutdown();
+        }
+
+        if (backUrl == null){
+            return "login2";
+        }else {
+            response.sendRedirect(backUrl);
+            return null;
+        }
+    }
     /**
      * 根据是否自动登陆的标识得到vt
      * @param response

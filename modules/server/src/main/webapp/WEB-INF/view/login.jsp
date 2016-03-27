@@ -10,7 +10,7 @@
 <script type="text/javascript">
 	
 	var UNAME_COOKIE_NAME = "lastLoginUserName";
-	
+
 	$(function() {
 		// 如果name没有value，将cookie中存储过的name值写入
 		var eleName = $("input[name=name]");
