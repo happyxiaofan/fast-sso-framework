@@ -50,7 +50,14 @@ public class LoginController {
             if (lt == null) {//lt不存在，跳转到登陆页面
                 return config.getLoginViewName();
             } else {//lt存在，执行自动登陆流程
-                return null;
+                //根据lt得到登陆的用户信息
+                LoginUser loginUser = config.getAuthenticationHandler().autoLogin(lt);
+                if (loginUser == null){
+                    return config.getLoginViewName();
+                }else {
+                    vt = authSuccess(response,loginUser,true);
+                    return validateSuccess(backUrl,vt,loginUser,response,map);
+                }
             }
         } else {//存在vt
             //获取登陆的用户
@@ -75,7 +82,7 @@ public class LoginController {
      * @throws Exception
      */
     @RequestMapping(value = "/login",method = RequestMethod.POST)
-    public String login(String backUrl, String rememberMe, ModelMap map,
+    public String login(String backUrl, Boolean rememberMe, ModelMap map,
                                 HttpServletRequest request, HttpServletResponse response,
                                 HttpSession session) throws Exception {
         //获取request中所有的请求参数
@@ -143,8 +150,21 @@ public class LoginController {
     public String logout(String backUrl,HttpServletResponse response,HttpServletRequest request) throws Exception{
         //获取客户端的vt
         String vt = CookieUtil.getCookie("VT",request);
+
+        //清除服务端的自动登陆信息
+        LoginUser user = TokenManager.validate(vt);
+        if (user != null){
+            //清除服务器的自动登陆状态
+            config.getAuthenticationHandler().clearLoginToken(user);
+            //清除自动cookie
+            Cookie cookie = new Cookie("LT",null);
+            cookie.setMaxAge(0);
+            response.addCookie(cookie);
+        }
+
         //移除vt
         TokenManager.invalid(vt);
+
         //设置服务端的vt失效
         Cookie cookie = new Cookie("VT",null);
         cookie.setMaxAge(0);
@@ -152,6 +172,7 @@ public class LoginController {
 
         //通知各个客户端失效
         for (ClientSystem client:config.getClientSystems()) {
+            //该方法在客户端中实现
             client.noticeShutdown();
         }
 
@@ -168,17 +189,37 @@ public class LoginController {
      * @param rememberMe
      * @return
      */
-    private String authSuccess(HttpServletResponse response, LoginUser user,String rememberMe) throws Exception {
+    private String authSuccess(HttpServletResponse response, LoginUser user,Boolean rememberMe) throws Exception {
         // 生成VT
         String vt = StringUtil.uniqueKey();
         // 生成LT？
         // TODO: 自动登录标识生成：后面实现
+        if (rememberMe != null && rememberMe){
+            //String lt = user.loginToken();
+            //使用更安全的方式处理自动登陆
+            String lt = config.getAuthenticationHandler().loginToken(user);
+            setLtCookie(lt,response);
+        }
         // 存入Map
         TokenManager.addToken(vt, user);
         // 写 Cookie
         Cookie cookie = new Cookie("VT", vt);
         response.addCookie(cookie);
         return vt;
+    }
+
+    /**
+     * 设置cookie
+     * @param lt
+     * @param response
+     */
+    private void setLtCookie(String lt, HttpServletResponse response) {
+        Cookie LT = new Cookie("LT",lt);
+        LT.setMaxAge(config.getAutoLoginExpiredDays() * 24 * 60 * 60);
+        if (config.isSecureMode()){
+            LT.setSecure(true);
+        }
+        response.addCookie(LT);
     }
 
     /**

@@ -41,4 +41,19 @@ public class DemoAuthenticationHandler implements IAuthenticationHandler {
     public Set<String> authedSystemIds(LoginUser loginUser) throws Exception {
         return null;
     }
+
+    @Override
+    public LoginUser autoLogin(String lt) throws Exception {
+        return null;
+    }
+
+    @Override
+    public String loginToken(LoginUser loginUser) throws Exception {
+        return null;
+    }
+
+    @Override
+    public void clearLoginToken(LoginUser user) throws Exception {
+
+    }
 }

@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.ResourceLoaderAware;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
+import org.springframework.util.comparator.BooleanComparator;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -36,6 +37,10 @@ public class Config implements ResourceLoaderAware{
     private List<ClientSystem> clientSystems = new ArrayList<>();
     //加载资源需要使用Spring提供的ResourceLoader
     private ResourceLoader resourceLoader;
+    //是否为安全模式
+    private boolean secureMode = false;
+    //自动登陆过期时间
+    private int autoLoginExpiredDays = 30;
 
     /**
      * 从配置文件中加载所有的子系统列表
@@ -113,6 +118,13 @@ public class Config implements ResourceLoaderAware{
             logger.warn("timeout参数配置错误");
         }
 
+        //确定是否仅在安全模式下运行
+        String configSecureMode = properties.getProperty("secureMode");
+        if (configSecureMode != null && configSecureMode.equals("true")){
+            this.secureMode = Boolean.parseBoolean(configSecureMode);
+            logger.debug("已成功启动安全模式！");
+        }
+
         //加载子系统列表
         loadSystems();
     }
@@ -169,5 +181,13 @@ public class Config implements ResourceLoaderAware{
 
     public void setPreLoginHandler(IPreLoginHandler preLoginHandler) {
         this.preLoginHandler = preLoginHandler;
+    }
+
+    public boolean isSecureMode() {
+        return secureMode;
+    }
+
+    public int getAutoLoginExpiredDays() {
+        return autoLoginExpiredDays;
     }
 }

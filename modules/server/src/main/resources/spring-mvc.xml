@@ -11,8 +11,19 @@
 								http://www.springframework.org/schema/mvc/spring-mvc.xsd">
 
     <mvc:annotation-driven/>
+
     <context:component-scan base-package="com.rhwayfun.sso.server.controller"/>
+
     <mvc:default-servlet-handler/>
+
+    <mvc:interceptors>
+        <!-- secure mode拦截检验 -->
+        <mvc:interceptor>
+            <mvc:mapping path="/*"/>
+            <bean class="com.rhwayfun.sso.server.util.SecureModeInterceptor" />
+        </mvc:interceptor>
+    </mvc:interceptors>
+
     <!-- jsp 视图解析器 -->
     <bean id="jspViewResolver"
           class="org.springframework.web.servlet.view.InternalResourceViewResolver">
