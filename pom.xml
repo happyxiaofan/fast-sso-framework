@@ -14,7 +14,8 @@
         <module>modules/server</module>
         <module>modules/common</module>
         <module>modules/global</module>
-        <!--<module>modules/app1</module>
-        <module>modules/app2</module>-->
+        <module>modules/client</module>
+        <module>modules/app1</module>
+        <module>modules/app2</module>
     </modules>
 </project>

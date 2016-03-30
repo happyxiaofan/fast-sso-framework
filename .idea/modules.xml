@@ -2,6 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/modules/app1/app1.iml" filepath="$PROJECT_DIR$/modules/app1/app1.iml" />
+      <module fileurl="file://$PROJECT_DIR$/modules/app2/app2.iml" filepath="$PROJECT_DIR$/modules/app2/app2.iml" />
+      <module fileurl="file://$PROJECT_DIR$/modules/client/client.iml" filepath="$PROJECT_DIR$/modules/client/client.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/common/common.iml" filepath="$PROJECT_DIR$/modules/common/common.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/global/global.iml" filepath="$PROJECT_DIR$/modules/global/global.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/server/server.iml" filepath="$PROJECT_DIR$/modules/server/server.iml" />
