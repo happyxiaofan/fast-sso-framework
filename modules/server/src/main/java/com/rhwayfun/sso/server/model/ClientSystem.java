@@ -1,6 +1,13 @@
 package com.rhwayfun.sso.server.model;
 
+import com.rhwayfun.sso.common.StringUtil;
+
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.Serializable;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Date;
 
 /**
@@ -67,22 +74,75 @@ public class ClientSystem implements Serializable {
 	 * @return 延期的有效期
 	 */
 	public Date noticeTimeout(String vt, int tokenTimeout) {
-		// TODO 与客户端通信处理有效期
-		return null;
+		try {
+			String url = innerAddress + "/notice/timeout?vt=" + vt + "&tokenTimeout=" + tokenTimeout;
+			String ret = httpAccess(url);
+
+			if (StringUtil.isEmpty(ret)) {
+				return null;
+			} else {
+				return new Date(Long.parseLong(ret));
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
 	}
 
 	/**
 	 * 通知客户端用户退出
 	 */
-	public void noticeLogout(String vt) {
-		//TODO 通知logout
+	public boolean noticeLogout(String vt) {
+		try {
+			String url = innerAddress + "/notice/logout?vt=" + vt;
+			String ret = httpAccess(url);
+
+			return Boolean.parseBoolean(ret);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+
+	/**
+	 *
+	 * @param theUrl
+	 * @return
+     */
+	private String httpAccess(String theUrl){
+		String ret = null;
+		try {
+			URL url = new URL(theUrl);
+			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+			InputStream is = conn.getInputStream();
+			conn.connect();
+
+			byte[] buff = new byte[is.available()];
+			is.read(buff);
+			ret = new String(buff, "utf-8");
+
+			conn.disconnect();
+			is.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		return ret;
 	}
 
 	/**
 	 * 通知客户端服务端关闭，客户端收到信息后执行清除缓存操作
 	 */
-	public void noticeShutdown() {
-		// TODO 通知shutdown
+	public boolean noticeShutdown() {
+		try {
+			String url = innerAddress + "/notice/shutdown";
+			String ret = httpAccess(url);
+
+			return Boolean.parseBoolean(ret);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
 	}
 
 }

@@ -4,4 +4,24 @@
 
 <web-app>
   <display-name>Archetype Created Web Application</display-name>
+  <filter>
+    <filter-name>SSOFilter</filter-name>
+    <filter-class>com.rhwayfun.sso.client.SSOFilter</filter-class>
+    <init-param>
+      <param-name>excludes</param-name>
+      <param-value>^/((about$)|(contact$)|(notmember/.+))</param-value>
+    </init-param>
+    <init-param>
+      <param-name>serverBaseUrl</param-name>
+      <param-value>http://www.ca.com:8080</param-value>
+    </init-param>
+    <init-param>
+      <param-name>serverInnerAddress</param-name>
+      <param-value>http://127.0.0.1:8080</param-value>
+    </init-param>
+  </filter>
+  <filter-mapping>
+    <filter-name>SSOFilter</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
 </web-app>

@@ -32,4 +32,19 @@ public class StringUtil {
     public static String uniqueKey() throws Exception{
         return UUID.randomUUID().toString().replace("-","").toLowerCase();
     }
+
+    /**
+     * 判断字符串是否为空
+     * @param excludes
+     * @return
+     */
+    public static boolean isEmpty(String excludes) {
+        if (excludes == null){
+            return true;
+        }
+        if (excludes.length() == 0){
+            return true;
+        }
+        return false;
+    }
 }

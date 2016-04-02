@@ -4,6 +4,7 @@ import com.rhwayfun.sso.server.model.ClientSystem;
 import com.rhwayfun.sso.server.model.LoginUser;
 import com.rhwayfun.sso.server.service.IAuthenticationHandler;
 import com.rhwayfun.sso.server.service.IPreLoginHandler;
+import com.rhwayfun.sso.server.service.UserSerializer;
 import org.dom4j.Document;
 import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
@@ -41,6 +42,8 @@ public class Config implements ResourceLoaderAware{
     private boolean secureMode = false;
     //自动登陆过期时间
     private int autoLoginExpiredDays = 30;
+    //用户对象序列化器
+    private UserSerializer userSerializer;
 
     /**
      * 从配置文件中加载所有的子系统列表
@@ -125,6 +128,17 @@ public class Config implements ResourceLoaderAware{
             logger.debug("已成功启动安全模式！");
         }
 
+        // 自动登录有效期
+        String configAutoLoginExpDays = properties.getProperty("autoLoginExpDays");
+        if (configAutoLoginExpDays != null) {
+            try {
+                autoLoginExpiredDays = Integer.parseInt(configAutoLoginExpDays);
+                logger.debug("config.properties设置autoLoginExpDays={}", autoLoginExpiredDays);
+            } catch (NumberFormatException e) {
+                logger.warn("autoLoginExpDays参数配置不正确");
+            }
+        }
+
         //加载子系统列表
         loadSystems();
     }
@@ -189,5 +203,13 @@ public class Config implements ResourceLoaderAware{
 
     public int getAutoLoginExpiredDays() {
         return autoLoginExpiredDays;
+    }
+
+    public UserSerializer getUserSerializer() {
+        return userSerializer;
+    }
+
+    public void setUserSerializer(UserSerializer userSerializer) {
+        this.userSerializer = userSerializer;
     }
 }

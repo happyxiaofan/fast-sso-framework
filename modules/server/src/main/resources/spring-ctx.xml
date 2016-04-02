@@ -17,5 +17,8 @@
         <property name="preLoginHandler">
             <bean class="com.rhwayfun.sso.server.service.CaptchaPreLoginHandler"></bean>
         </property>
+        <property name="userSerializer">
+            <bean class="com.rhwayfun.sso.server.service.DemoUserSerializer"/>
+        </property>
     </bean>
 </beans>

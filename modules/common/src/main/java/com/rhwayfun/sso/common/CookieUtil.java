@@ -2,6 +2,7 @@ package com.rhwayfun.sso.common;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * Created by rhwayfun on 16-3-23.
@@ -28,5 +29,18 @@ public class CookieUtil {
             }
         }
         return null;
+    }
+
+    /**
+     * 根据vt删除cookie
+     * @param vt
+     * @param response
+     */
+    public static void deleteCookie(String vt, HttpServletResponse response) {
+        if (vt != null){
+            Cookie cookie = new Cookie("VT",null);
+            cookie.setMaxAge(0);
+            response.addCookie(cookie);
+        }
     }
 }
