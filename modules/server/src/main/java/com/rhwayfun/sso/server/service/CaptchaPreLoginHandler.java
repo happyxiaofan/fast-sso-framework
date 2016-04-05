@@ -29,7 +29,7 @@ public class CaptchaPreLoginHandler implements  IPreLoginHandler {
      * @throws Exception
      */
     @Override
-    public Map<String, Object> handle(HttpSession session, HttpServletResponse response) throws Exception {
+    public Object handle(HttpSession session, HttpServletResponse response) throws Exception {
         //返回的map
         Map<String,Object> res = new HashMap<>();
         generateImage(session,response);

@@ -17,13 +17,11 @@ public class CookieUtil {
      * @return
      * @throws Exception
      */
-    public static String getCookie(String cookieName, HttpServletRequest request) throws Exception{
-        //获取所有的cookie
+    public static String getCookie(String cookieName, HttpServletRequest request) {
         Cookie[] cookies = request.getCookies();
-        //遍历所有的cookie查找与给定cookie相同cookieName的cookie
-        if (cookies != null){
-            for (Cookie cookie : cookies){
-                if (cookieName.equals(cookie.getName())){
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if (cookie.getName().equals(cookieName)) {
                     return cookie.getValue();
                 }
             }
@@ -33,14 +31,14 @@ public class CookieUtil {
 
     /**
      * 根据vt删除cookie
-     * @param vt
      * @param response
      */
-    public static void deleteCookie(String vt, HttpServletResponse response) {
-        if (vt != null){
-            Cookie cookie = new Cookie("VT",null);
-            cookie.setMaxAge(0);
-            response.addCookie(cookie);
+    public static void deleteCookie(String cookieName, HttpServletResponse response, String path) {
+        Cookie cookie = new Cookie(cookieName, null);
+        cookie.setMaxAge(0);
+        if (path != null) {
+            cookie.setPath("/");
         }
+        response.addCookie(cookie);
     }
 }

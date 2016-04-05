@@ -6,9 +6,6 @@ import java.util.Set;
 
 /**
  * SSOUser的实现，服务端生成此对象实例并序列化后传输给客户端
- * 
- * @author preach
- *
  */
 @SuppressWarnings("serial")
 public class SSOUserImpl implements SSOUser {
@@ -23,6 +20,7 @@ public class SSOUserImpl implements SSOUser {
 
     /**
      * 写入属性
+     *
      */
     public void setProperties(Map<String, Object> properties) {
         PROPERTY_MAP.putAll(properties);

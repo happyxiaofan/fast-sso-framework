@@ -6,8 +6,12 @@ import java.net.URL;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+
+import com.rhwayfun.sso.common.StringUtil;
+
 /**
  * 令牌管理工具
+ *
  */
 public class TokenManager {
 
@@ -18,7 +22,7 @@ public class TokenManager {
     }
 
     // 缓存Map
-    private final static Map<String, Token> LOCAL_CACHE = new HashMap<String, Token>();
+    private final static Map<String, Token> LOCAL_CACHE = new HashMap<String, TokenManager.Token>();
 
     static String serverIndderAddress; // 服务端内网通信地址
 
@@ -43,11 +47,7 @@ public class TokenManager {
         return user;
     }
 
-    /**
-     * 在本地缓存验证有效性
-     * @param vt
-     * @return
-     */
+    // 在本地缓存验证有效性
     private static SSOUser localValidate(String vt) {
 
         // 从缓存中查找数据
@@ -63,11 +63,7 @@ public class TokenManager {
         return null;
     }
 
-    /**
-     * 远程验证成功后写入本地缓存中
-     * @param vt
-     * @param user
-     */
+    // 远程验证成功后将信息写入本地缓存
     private static void cacheUser(String vt, SSOUser user) {
         Token token = new Token();
         token.user = user;
@@ -75,12 +71,7 @@ public class TokenManager {
         LOCAL_CACHE.put(vt, token);
     }
 
-    /**
-     * 验证远程vt的有效性
-     * @param vt
-     * @return
-     * @throws Exception
-     */
+    // 远程验证vt有效性
     private static SSOUser remoteValidate(String vt) throws Exception {
 
         URL url = new URL(serverIndderAddress + "/validate_service?vt=" + vt);
@@ -97,7 +88,7 @@ public class TokenManager {
         is.close();
 
         UserDeserializer userDeserializer = UserDeserailizerFactory.create();
-        SSOUser user = userDeserializer.deserail(ret);
+        SSOUser user = StringUtil.isEmpty(ret) ? null : userDeserializer.deserail(ret);
 
         if (user != null) {
             // 处理本地缓存

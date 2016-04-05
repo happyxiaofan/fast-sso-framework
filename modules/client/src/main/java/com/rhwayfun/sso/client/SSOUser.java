@@ -5,8 +5,6 @@ import java.util.Set;
 
 /**
  * 当前登录用户
- * 
- * @author preach
  *
  */
 public interface SSOUser extends Serializable {
@@ -16,20 +14,21 @@ public interface SSOUser extends Serializable {
      * 
      * @return
      */
-    String getId();
+    public String getId();
 
     /**
      * 按名称获取用户属性值
      * 
      * @param propertyName
+     * @param
      * @return
      */
-    Object getProperty(String propertyName);
+    public Object getProperty(String propertyName);
 
     /**
      * 获取所有可用属性名集合
      * 
      * @return
      */
-    Set<String> propertyNames();
+    public Set<String> propertyNames();
 }

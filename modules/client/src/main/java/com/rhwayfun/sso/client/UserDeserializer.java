@@ -1,7 +1,7 @@
 package com.rhwayfun.sso.client;
 
 /**
- * 将服务端传来的user数据反序列化 created by rhwayfun
+ * 将服务端传来的user数据反序列化
  */
 public interface UserDeserializer {
 
@@ -12,5 +12,5 @@ public interface UserDeserializer {
      * @return
      * @throws Exception
      */
-    SSOUser deserail(String userDate) throws Exception;
+    public SSOUser deserail(String userDate) throws Exception;
 }

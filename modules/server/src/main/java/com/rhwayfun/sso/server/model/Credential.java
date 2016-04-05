@@ -1,40 +1,52 @@
 package com.rhwayfun.sso.server.model;
 
 /**
- * Created by rhwayfun on 16-3-23.
+ * 对登录页面提交的内容集中存储，并提供特定获取方法的一个实体类
+ * 
+ * @author Administrator
+ *
  */
 public abstract class Credential {
-    //错误信息
-    private String errorMsg;
+	private String error; // 错误信息
 
-    /**
-     * 根据名称获取某个参数的值
-     * @param name
-     * @return
-     * @throws Exception
-     */
-    public abstract String getParameter(String name) throws  Exception;
+	/**
+	 * 获取一个参数值
+	 * 
+	 * @param name
+	 * @return
+	 */
+	public abstract String getParameter(String name);
 
-    /**
-     * 根据名称获取一组参数的值
-     * @param name
-     * @return
-     * @throws Exception
-     */
-    public abstract String[] getParameters(String name) throws Exception;
+	/**
+	 * 获取多值参数数组
+	 * 
+	 * @param name
+	 * @return
+	 */
+	public abstract String[] getParameterValue(String name);
 
-    /**
-     * 通过preLoginHandler的getSettedSessionValue的方法设置验证码的值
-     * @return
-     * @throws Exception
-     */
-    public abstract Object getSettedSessionValue() throws Exception;
-    public String getErrorMsg() {
-        return errorMsg;
-    }
+	/**
+	 * 由PreLoginHandler通过setSessionValue()方法写入特定session属性值
+	 * 
+	 * @return
+	 */
+	public abstract Object getSettedSessionValue();
 
-    public void setErrorMsg(String errorMsg) {
-        this.errorMsg = errorMsg;
-    }
+	/**
+	 * 授权失败时，设置失败提示信息
+	 * 
+	 * @param errorMsg
+	 */
+	public void setErrorMsg(String errorMsg) {
+		this.error = errorMsg;
+	}
 
+	/**
+	 * 获取失败提示信息
+	 * 
+	 * @return
+	 */
+	public String getErrorMsg() {
+		return this.error;
+	}
 }

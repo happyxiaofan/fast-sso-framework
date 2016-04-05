@@ -2,7 +2,6 @@ package com.rhwayfun.sso.server.service;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.util.Map;
 
 /**
  * Created by rhwayfun on 16-3-27.
@@ -17,5 +16,5 @@ public interface IPreLoginHandler {
      * @return
      * @throws Exception
      */
-    Map<?,?> handle(HttpSession session, HttpServletResponse response) throws Exception;
+    Object handle(HttpSession session, HttpServletResponse response) throws Exception;
 }
